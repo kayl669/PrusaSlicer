@@ -199,6 +199,13 @@ public:
         std::vector<float>  ramming_speed;
         float               nozzle_diameter;
         float               filament_area;
+// dribbling		
+        float				dribbling_meltingzone = 8.f ;
+		int					dribbling_moves = 1 ;
+		int					dribbling_temperature = 0 ;	
+		int					filament_mintemp = 0 ;	
+		int					filament_maxtemp = 0 ;		
+// dribbling		
     };
 
 private:
@@ -229,6 +236,7 @@ private:
 	size_t m_max_color_changes 	= 0; 	// Maximum number of color changes per layer.
 	bool   m_is_first_layer 	= false;// Is this the 1st layer of the print? If so, print the brim around the waste tower.
     int    m_old_temperature    = -1;   // To keep track of what was the last temp that we set (so we don't issue the command when not neccessary)
+    bool   m_dribbling_enabled = false;
 
 	// G-code generator parameters.
     float           m_cooling_tube_retraction   = 0.f;

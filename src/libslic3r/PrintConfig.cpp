@@ -752,6 +752,56 @@ void PrintConfigDef::init_fff_params()
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloats { 0.0f });
 
+// dribbling additions
+        
+    def = this->add("dribbling_enabled", coBool);
+    def->label = L("Dribbling Mode");
+    def->tooltip = L("Dribbling mode improves the shape of the filament at unloading.");    
+    def->mode = comSimple;
+    def->set_default_value(new ConfigOptionBool { false });        
+
+   	def = this->add("dribbling_meltingzone", coFloat);
+    def->mode = comExpert;
+    def->label = L("Melting distance");
+    def->tooltip = L("Melting distance from the end of the cooler's PTFE tube.");		
+    def->sidetext = L("mm");
+    def->min = 3;
+    def->set_default_value(new ConfigOptionFloat{ 8.f });
+	
+    def = this->add("dribbling_moves", coInts);
+    def->mode = comAdvanced;
+    def->label = L("Number of dribbling moves");
+    def->tooltip = L("How many dribbling moves the filament should do.");
+    def->sidetext = L("moves");
+    def->min = 1;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionInts{ 1 });
+
+    def = this->add("filament_mintemp", coInts);
+		def->mode = comSimple;
+    def->label = L("Min temp");
+    def->tooltip = L("Filament Manufacturer's minimal melting temperature allowed.");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 185 });
+
+	  def = this->add("filament_maxtemp", coInts);
+		def->mode = comSimple;
+    def->label = L("Max temp   ");
+    def->tooltip = L("Filament Manufacturer's maximal allowed temperature.");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 210 });
+
+	  def = this->add("dribbling_temperature", coInts);
+    def->label = L("Tip shape");
+    def->mode = comAdvanced;
+    def->tooltip = L("Best filament's temperature for dribbling tip shaping.");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 190 });
+
+// end dribbling
     def = this->add("filament_ramming_parameters", coStrings);
     def->label = L("Ramming parameters");
     def->tooltip = L("This string is edited by RammingDialog and contains ramming specific parameters.");

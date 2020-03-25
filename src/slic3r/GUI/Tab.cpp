@@ -463,8 +463,8 @@ void Tab::OnActivate()
     // tree control items, stealing the window focus.
     //
     // In case the Tab was reparented from the MainFrame to the floating dialog,
-    // the tooltip created by the Tree Control before reparenting is not reparented, 
-    // but it still points to the MainFrame. If the tooltip pops up, the MainFrame 
+    // the tooltip created by the Tree Control before reparenting is not reparented,
+    // but it still points to the MainFrame. If the tooltip pops up, the MainFrame
     // is incorrectly focussed, stealing focus from the floating dialog.
     //
     // The workaround is to delete the tooltip control.
@@ -505,7 +505,7 @@ void Tab::update_labels_colour()
             else
                 color = &m_modified_label_clr;
         }
-        if (opt.first == "bed_shape"            || opt.first == "filament_ramming_parameters" || 
+        if (opt.first == "bed_shape"            || opt.first == "filament_ramming_parameters" ||
             opt.first == "compatible_prints"    || opt.first == "compatible_printers"           ) {
             if (m_colored_Label_colors.find(opt.first) != m_colored_Label_colors.end())
                 m_colored_Label_colors.at(opt.first) = *color;
@@ -588,7 +588,7 @@ void Tab::decorate()
             *colored_label_clr = *color;
             continue;
         }
-        
+
         field->m_is_nonsys_value = is_nonsys_value;
         field->m_is_modified_value = is_modified_value;
         field->set_undo_bitmap(icon);
@@ -690,7 +690,7 @@ void TabPrinter::msw_rescale()
     Layout();
 }
 
-void TabPrinter::sys_color_changed() 
+void TabPrinter::sys_color_changed()
 {
     Tab::sys_color_changed();
 
@@ -729,7 +729,7 @@ void TabSLAMaterial::init_options_list()
 void Tab::get_sys_and_mod_flags(const std::string& opt_key, bool& sys_page, bool& modified_page)
 {
     auto opt = m_options_list.find(opt_key);
-    if (opt == m_options_list.end()) 
+    if (opt == m_options_list.end())
         return;
 
     if (sys_page) sys_page = (opt->second & osSystemValue) != 0;
@@ -1100,7 +1100,7 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
         boost::any val = og_freq_chng_params->get_config_value(*m_config, opt_key);
         og_freq_chng_params->set_value(opt_key, val);
     }
-    
+
     if (opt_key == "pad_around_object") {
         for (PageShp &pg : m_pages) {
             Field * fld = pg->get_field(opt_key); /// !!! ysFIXME ????
@@ -1172,9 +1172,9 @@ void Tab::activate_option(const std::string& opt_key, const wxString& category)
     if (field)
         field->getWindow()->SetFocus();
     else if (category == "Single extruder MM setup") {
-        // When we show and hide "Single extruder MM setup" page, 
+        // When we show and hide "Single extruder MM setup" page,
         // related options are still in the search list
-        // So, let's hightlighte a "single_extruder_multi_material" option, 
+        // So, let's hightlighte a "single_extruder_multi_material" option,
         // as a "way" to show hidden page again
         field = get_field("single_extruder_multi_material");
         if (field)
@@ -1241,7 +1241,7 @@ void Tab::build_preset_description_line(ConfigOptionsGroup* optgroup)
     };
 
     auto detach_preset_btn = [this](wxWindow* parent) {
-        m_detach_preset_btn = new ScalableButton(parent, wxID_ANY, "lock_open_sys", _L("Detach from system preset"), 
+        m_detach_preset_btn = new ScalableButton(parent, wxID_ANY, "lock_open_sys", _L("Detach from system preset"),
                                                  wxDefaultSize, wxDefaultPosition, wxBU_LEFT | wxBU_EXACTFIT, true);
         ScalableButton* btn = m_detach_preset_btn;
         btn->SetFont(Slic3r::GUI::wxGetApp().normal_font());
@@ -1253,7 +1253,7 @@ void Tab::build_preset_description_line(ConfigOptionsGroup* optgroup)
         {
         	bool system = m_presets->get_edited_preset().is_system;
         	bool dirty  = m_presets->get_edited_preset().is_dirty;
-            wxString msg_text = system ? 
+            wxString msg_text = system ?
             	_(L("A copy of the current system preset will be created, which will be detached from the system preset.")) :
                 _(L("The current custom preset will be detached from the parent system preset."));
             if (dirty) {
@@ -1561,6 +1561,7 @@ void TabPrint::build()
 
         optgroup = page->new_optgroup(L("Advanced"));
         optgroup->append_single_option_line("interface_shells");
+        optgroup->append_single_option_line("dribbling_enabled");
 
     page = add_options_page(L("Advanced"), "wrench");
         optgroup = page->new_optgroup(L("Extrusion width"));
@@ -1622,7 +1623,7 @@ void TabPrint::build()
         create_line_with_widget(optgroup.get(), "compatible_printers", wxEmptyString, [this](wxWindow* parent) {
             return compatible_widget_create(parent, m_compatible_printers);
         });
-        
+
         option = optgroup->get_option("compatible_printers_condition");
         option.opt.full_width = true;
         optgroup->append_single_option_line(option);
@@ -1644,7 +1645,7 @@ void TabPrint::update_description_lines()
     if (m_preset_bundle->printers.get_selected_preset().printer_technology() == ptSLA)
         return;
 
-    if (m_active_page && m_active_page->title() == "Layers and perimeters" && 
+    if (m_active_page && m_active_page->title() == "Layers and perimeters" &&
         m_recommended_thin_wall_thickness_description_line && m_top_bottom_shell_thickness_explanation)
     {
         m_recommended_thin_wall_thickness_description_line->SetText(
@@ -1679,7 +1680,7 @@ void TabPrint::update()
         toggle_options();
 
         // update() could be called during undo/redo execution
-        // Update of objectList can cause a crash in this case (because m_objects doesn't match ObjectList) 
+        // Update of objectList can cause a crash in this case (because m_objects doesn't match ObjectList)
         if (!wxGetApp().plater()->inside_snapshot_capture())
             wxGetApp().obj_list()->update_and_show_object_settings_item();
 
@@ -1820,7 +1821,13 @@ void TabFilament::build()
         };
 
         optgroup = page->new_optgroup(L("Temperature"));
-        Line line = { L("Nozzle"), "" };
+// dribbling
+		Line line = { _(L("Manufacturer")), "" };
+        line.append_option(optgroup->get_option("filament_mintemp"));
+        line.append_option(optgroup->get_option("filament_maxtemp"));
+        optgroup->append_line(line);
+// dribbling
+        line = { L("Nozzle"), "" };
         line.append_option(optgroup->get_option("first_layer_temperature"));
         line.append_option(optgroup->get_option("temperature"));
         optgroup->append_line(line);
@@ -1829,6 +1836,12 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("first_layer_bed_temperature"));
         line.append_option(optgroup->get_option("bed_temperature"));
         optgroup->append_line(line);
+
+// dribbling
+        line = { _(L("Dribbling")), "" };
+        line.append_option(optgroup->get_option("dribbling_temperature"));
+        optgroup->append_line(line);
+// dribbling
 
     page = add_options_page(L("Cooling"), "cooling");
         wxString category_path = "cooling_127569#";
@@ -1891,6 +1904,9 @@ void TabFilament::build()
         optgroup->append_single_option_line("filament_cooling_moves");
         optgroup->append_single_option_line("filament_cooling_initial_speed");
         optgroup->append_single_option_line("filament_cooling_final_speed");
+// dribbling
+        optgroup->append_single_option_line("dribbling_moves");
+// end dribbling
 
         create_line_with_widget(optgroup.get(), "filament_ramming_parameters", wxEmptyString, [this](wxWindow* parent) {
             auto ramming_dialog_btn = new wxButton(parent, wxID_ANY, _(L("Ramming settings"))+dots, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
@@ -2335,7 +2351,7 @@ void TabPrinter::build_sla()
     optgroup->append_single_option_line("elefant_foot_compensation");
     optgroup->append_single_option_line("elefant_foot_min_width");
     optgroup->append_single_option_line("gamma_correction");
-    
+
     optgroup = page->new_optgroup(L("Exposure"));
     optgroup->append_single_option_line("min_exposure_time");
     optgroup->append_single_option_line("max_exposure_time");
@@ -2528,6 +2544,7 @@ void TabPrinter::build_unregular_pages()
         optgroup->append_single_option_line("cooling_tube_length");
         optgroup->append_single_option_line("parking_pos_retraction");
         optgroup->append_single_option_line("extra_loading_move");
+        optgroup->append_single_option_line("dribbling_meltingzone");
         optgroup->append_single_option_line("high_current_on_filament_swap");
         m_pages.insert(m_pages.end() - n_after_single_extruder_MM, page);
         m_has_single_extruder_MM_page = true;
@@ -2609,7 +2626,7 @@ void TabPrinter::build_unregular_pages()
             optgroup = page->new_optgroup(L("Preview"));
 
             auto reset_to_filament_color = [this, extruder_idx](wxWindow* parent) {
-                m_reset_to_filament_color = new ScalableButton(parent, wxID_ANY, "undo", _L("Reset to Filament Color"), 
+                m_reset_to_filament_color = new ScalableButton(parent, wxID_ANY, "undo", _L("Reset to Filament Color"),
                                                                wxDefaultSize, wxDefaultPosition, wxBU_LEFT | wxBU_EXACTFIT, true);
                 ScalableButton* btn = m_reset_to_filament_color;
                 btn->SetFont(Slic3r::GUI::wxGetApp().normal_font());
@@ -2900,7 +2917,7 @@ void Tab::load_current_preset()
                 // The change of the technology requires to remove some of unrelated Tabs
                 // During this action, wxNoteBook::RemovePage invoke wxEVT_NOTEBOOK_PAGE_CHANGED
                 // and as a result a function select_active_page() is called fron Tab::OnActive()
-                // But we don't need it. So, to avoid activation of the page, set m_active_page to NULL 
+                // But we don't need it. So, to avoid activation of the page, set m_active_page to NULL
                 // till unusable Tabs will be deleted
                 Page* tmp_page = m_active_page;
                 m_active_page = nullptr;
@@ -2989,7 +3006,7 @@ void Tab::update_btns_enabling()
     // we can delete any preset from the physical printer
     // and any user preset
     const Preset& preset = m_presets->get_edited_preset();
-    m_btn_delete_preset->Show(m_type == Preset::TYPE_PRINTER && m_preset_bundle->physical_printers.has_selection() || 
+    m_btn_delete_preset->Show(m_type == Preset::TYPE_PRINTER && m_preset_bundle->physical_printers.has_selection() ||
                               !preset.is_default && !preset.is_system);
 
     if (m_btn_edit_ph_printer)
@@ -3043,7 +3060,7 @@ void Tab::select_preset(std::string preset_name, bool delete_current /*=false*/,
         PrinterTechnology  printer_technology = printer_profile.preset.printer_technology();
         PresetCollection  &dependent = (printer_technology == ptFFF) ? m_preset_bundle->filaments : m_preset_bundle->sla_materials;
         bool 			   old_preset_dirty = dependent.current_is_dirty();
-        bool 			   new_preset_compatible = is_compatible_with_print(dependent.get_edited_preset_with_vendor_profile(), 
+        bool 			   new_preset_compatible = is_compatible_with_print(dependent.get_edited_preset_with_vendor_profile(),
         	m_presets->get_preset_with_vendor_profile(*m_presets->find_preset(preset_name, true)), printer_profile);
         if (! canceled)
             canceled = old_preset_dirty && ! new_preset_compatible && ! may_discard_current_dirty_preset(&dependent, preset_name);
@@ -3324,7 +3341,7 @@ bool Tab::tree_sel_change_delayed()
 
     // clear pages from the controls
     m_active_page = page;
-    
+
     auto throw_if_canceled = std::function<void()>([this](){
 #ifdef WIN32
             wxCheckForInterrupt(m_treectrl);
@@ -3401,14 +3418,14 @@ void Tab::save_preset(std::string name /*= ""*/, bool detach)
     if (m_type == Preset::TYPE_PRINTER)
         static_cast<TabPrinter*>(this)->m_initial_extruders_count = static_cast<TabPrinter*>(this)->m_extruders_count;
 
-    // Parent preset is "default" after detaching, so we should to update UI values, related on parent preset  
+    // Parent preset is "default" after detaching, so we should to update UI values, related on parent preset
     if (detach)
         update_ui_items_related_on_parent_preset(m_presets->get_selected_preset_parent());
 
     update_changed_ui();
 
-    /* If filament preset is saved for multi-material printer preset, 
-     * there are cases when filament comboboxs are updated for old (non-modified) colors, 
+    /* If filament preset is saved for multi-material printer preset,
+     * there are cases when filament comboboxs are updated for old (non-modified) colors,
      * but in full_config a filament_colors option aren't.*/
     if (m_type == Preset::TYPE_FILAMENT && wxGetApp().extruders_edited_cnt() > 1)
         wxGetApp().plater()->force_filament_colors_update();
@@ -3456,7 +3473,7 @@ void Tab::delete_preset()
                 Layout();
             return;
         }
-        
+
         msg = format_wxstr(_L("Are you sure you want to delete \"%1%\" preset from the physical printer \"%2%\"?"), current_preset.name, printer.name);
     }
     else
@@ -3484,7 +3501,7 @@ void Tab::delete_preset()
                 msg += "\n" + _L("Note, that this/those printer(s) will be deleted after deleting of the selected preset.") + "\n\n";
             }
         }
-    
+
         msg += from_u8((boost::format(_u8L("Are you sure you want to %1% the selected preset?")) % action).str());
     }
 
@@ -3671,7 +3688,7 @@ wxSizer* TabPrinter::create_bed_shape_widget(wxWindow* parent)
             }
         }));
 
-    // may be it is not a best place, but 
+    // may be it is not a best place, but
     // add information about Category/Grope for "bed_custom_texture" and "bed_custom_model" as a copy from "bed_shape" option
     {
         Search::OptionsSearcher& searcher = wxGetApp().sidebar().get_searcher();
@@ -3811,7 +3828,7 @@ void Page::update_visibility(ConfigOptionMode mode, bool update_contolls_visibil
 {
     bool ret_val = false;
     for (auto group : m_optgroups) {
-        ret_val = (update_contolls_visibility     ? 
+        ret_val = (update_contolls_visibility     ?
                    group->update_visibility(mode) :  // update visibility for all controlls in group
                    group->is_visible(mode)           // just detect visibility for the group
                    ) || ret_val;
@@ -4003,7 +4020,7 @@ void TabSLAMaterial::build()
     create_line_with_widget(optgroup.get(), "compatible_printers", wxEmptyString, [this](wxWindow* parent) {
         return compatible_widget_create(parent, m_compatible_printers);
     });
-    
+
     option = optgroup->get_option("compatible_printers_condition");
     option.opt.full_width = true;
     optgroup->append_single_option_line(option);
@@ -4065,7 +4082,7 @@ void TabSLAPrint::build()
     optgroup->append_single_option_line("support_pillar_diameter");
     optgroup->append_single_option_line("support_small_pillar_diameter_percent");
     optgroup->append_single_option_line("support_max_bridges_on_pillar");
-    
+
     optgroup->append_single_option_line("support_pillar_connection_mode");
     optgroup->append_single_option_line("support_buildplate_only");
     // TODO: This parameter is not used at the moment.
@@ -4073,7 +4090,7 @@ void TabSLAPrint::build()
     optgroup->append_single_option_line("support_base_diameter");
     optgroup->append_single_option_line("support_base_height");
     optgroup->append_single_option_line("support_base_safety_distance");
-    
+
     // Mirrored parameter from Pad page for toggling elevation on the same page
     optgroup->append_single_option_line("support_object_elevation");
 
@@ -4110,7 +4127,7 @@ void TabSLAPrint::build()
     optgroup->append_single_option_line("pad_object_connector_stride");
     optgroup->append_single_option_line("pad_object_connector_width");
     optgroup->append_single_option_line("pad_object_connector_penetration");
-    
+
     page = add_options_page(L("Hollowing"), "hollowing");
     optgroup = page->new_optgroup(L("Hollowing"));
     optgroup->append_single_option_line("hollowing_enable");
@@ -4195,7 +4212,7 @@ void TabSLAPrint::update()
         toggle_options();
 
         // update() could be called during undo/redo execution
-        // Update of objectList can cause a crash in this case (because m_objects doesn't match ObjectList) 
+        // Update of objectList can cause a crash in this case (because m_objects doesn't match ObjectList)
         if (!wxGetApp().plater()->inside_snapshot_capture())
             wxGetApp().obj_list()->update_and_show_object_settings_item();
 
